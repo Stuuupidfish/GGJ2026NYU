@@ -24,6 +24,11 @@ public class GameManager : MonoBehaviour
     private UI ui;
 
     private bool playerWins = false;
+    public bool PlayerWins 
+    {
+        get {return playerWins;}
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -37,22 +42,28 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         downSpeed = damageSlowDown ? 0.05f : 0.1f;
-        if (!ui.IsGameOver && bkg.GetComponent<Rigidbody2D>().position.y >= -145)
+        if (!ui.IsGameOver && bkg.GetComponent<Rigidbody2D>().position.y >= -130)
         {
             bkg.GetComponent<Rigidbody2D>().position += new Vector2(0, -downSpeed);
+            if (Vector2.Distance(bkg.GetComponent<Rigidbody2D>().position, lastSpawnPosition) >= 6f)
+            {
+                spawnNewEnemy();
+            }
+            // Bubble spawn timer
+            bubbleTimer += Time.deltaTime;
+            if (bubbleTimer >= 1.5f)
+            {
+                spawnAirBubble();
+                bubbleTimer = 0f;
+            }
         }
-        if (Vector2.Distance(bkg.GetComponent<Rigidbody2D>().position, lastSpawnPosition) >= 4.5f)
+        else if (bkg.GetComponent<Rigidbody2D>().position.y < -130 && bkg.GetComponent<Rigidbody2D>().position.y >= -135.5)
         {
-            spawnNewEnemy();
+            playerWins = true;
+            bkg.GetComponent<Rigidbody2D>().position += new Vector2(0, -downSpeed);
         }
 
-        // Bubble spawn timer
-        bubbleTimer += Time.deltaTime;
-        if (bubbleTimer >= 2f)
-        {
-            spawnAirBubble();
-            bubbleTimer = 0f;
-        }
+        
     }
 
     //trigger the slowdown effect for 1 second

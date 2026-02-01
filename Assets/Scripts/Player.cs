@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
         get { return Mathf.RoundToInt(oxygen); }
     }
 
-
+    private UI ui;
 
 
 
@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         rb = gameObject.GetComponent<Rigidbody2D>();
+        ui = FindObjectOfType<UI>();
         animator = gameObject.GetComponent<Animator>();
         rb.position = new Vector2(0, -3);
         oxygen = 100f;
@@ -31,14 +32,20 @@ public class Player : MonoBehaviour
     {
         // Continuous oxygen drain
         float drainRate = 2f; // oxygen per second
-        if (oxygen > 0)
+        if (!gameManager.PlayerWins && !ui.IsGameOver)
         {
-            oxygen -= drainRate * Time.deltaTime;
-            if (oxygen < 0)
-                oxygen = 0;
+            if (oxygen > 0)
+            {
+                oxygen -= drainRate * Time.deltaTime;
+                if (oxygen < 0)
+                    oxygen = 0;
+            }
         }
         if (oxygen > 100)
+        {
             oxygen = 100;
+        }
+    
 
     }
 
