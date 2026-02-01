@@ -14,12 +14,18 @@ public class Player : MonoBehaviour
     }
 
     private UI ui;
+    private Oxygen mask;
 
+    [SerializeField] private Sprite dead;
 
-
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip pop;
+    [SerializeField] private AudioClip[] hurt;
+    [SerializeField] private AudioClip die;
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        mask = FindObjectOfType<Oxygen>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         ui = FindObjectOfType<UI>();
         animator = gameObject.GetComponent<Animator>();
@@ -31,7 +37,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         // Continuous oxygen drain
-        float drainRate = 2f; // oxygen per second
+        float drainRate = 3f; // oxygen per second
         if (!gameManager.PlayerWins && !ui.IsGameOver)
         {
             if (oxygen > 0)
@@ -74,35 +80,45 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Trigger");
-            gameManager.TriggerSlowDown();
+            //Debug.Log("Trigger");
+            mask.CrackMask();
+            mask.ShakeMask();
             Enemy enemy = other.GetComponent<Enemy>();
-            if (oxygen - enemy.OxygenDepletion <= 0)
+            if (!ui.IsGameOver && oxygen - enemy.OxygenDepletion <= 0)
             {
-                Debug.Log("Dead");
+                //Debug.Log("Dead");
                 oxygen = 0f;
-                if (animator != null)
-                {
-                    animator.SetTrigger("Dead");
-                }
+                animator.SetTrigger("Hurt");
+                animator.SetTrigger("Dead");
+                audioSource.Stop();
+                audioSource.PlayOneShot(die);
+                GetComponent<SpriteRenderer>().sprite = dead;
             }
-            else
+            else if (!ui.IsGameOver)
             {
+                gameManager.TriggerSlowDown();
                 oxygen -= enemy.OxygenDepletion;
+                audioSource.PlayOneShot(hurt[Random.Range(0, 2)]);
                 animator.SetTrigger("Hurt");
             }
+            
         }
         if (other.gameObject.CompareTag("AirBubble"))
         {
-            if (oxygen + 10 >= 100)
+            audioSource.PlayOneShot(pop);
+            if (!ui.IsGameOver)
             {
-                oxygen = 100f;
-            }
-            else
-            {
-                oxygen += 10f;
+                if (oxygen + 10 >= 100)
+                {
+                    oxygen = 100f;
+                }
+                else
+                {
+                    oxygen += 5f;
+                }
             }
             Destroy(other.gameObject);
         }
     }
+
 }

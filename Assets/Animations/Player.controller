@@ -141,7 +141,7 @@ AnimatorController:
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 1
+    m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   - m_Name: Dead
     m_Type: 9
@@ -207,10 +207,10 @@ AnimatorStateMachine:
     m_Position: {x: 30, y: 200, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5803355195898452601}
-    m_Position: {x: 240, y: 20, z: 0}
+    m_Position: {x: 260, y: 50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5868680601936230327}
-    m_Position: {x: 380, y: 190, z: 0}
+    m_Position: {x: 270, y: 170, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

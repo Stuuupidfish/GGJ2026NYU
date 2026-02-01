@@ -8,9 +8,16 @@ public class UI : MonoBehaviour
     // Start is called before the first frame update
     public TextMeshProUGUI scoreText;
     private Player player;
+    private GameManager gameManager;
     [SerializeField] private GameObject gameOver;
+    [SerializeField] private GameObject youWin;
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip win;
+    
     void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
         player = FindObjectOfType<Player>();
         scoreText.text = "Oxygen level: 100%";
         gameOver.SetActive(false);
@@ -24,10 +31,20 @@ public class UI : MonoBehaviour
         {
             GameOver();
         }
+        
+        if (gameManager.PlayerWins)
+        {
+            Win();
+        }
     }
     public void GameOver()
     {
         gameOver.SetActive(true);
         IsGameOver = true;
+    }
+    public void Win()
+    {
+        audioSource.PlayOneShot(win);
+        youWin.SetActive(true);
     }
 }

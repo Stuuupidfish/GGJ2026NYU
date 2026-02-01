@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,11 +25,13 @@ public class GameManager : MonoBehaviour
     private UI ui;
 
     private bool playerWins = false;
-    public bool PlayerWins 
+    public bool PlayerWins
     {
         get {return playerWins;}
     }
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip click;
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +48,7 @@ public class GameManager : MonoBehaviour
         if (!ui.IsGameOver && bkg.GetComponent<Rigidbody2D>().position.y >= -130)
         {
             bkg.GetComponent<Rigidbody2D>().position += new Vector2(0, -downSpeed);
-            if (Vector2.Distance(bkg.GetComponent<Rigidbody2D>().position, lastSpawnPosition) >= 6f)
+            if (Vector2.Distance(bkg.GetComponent<Rigidbody2D>().position, lastSpawnPosition) >= 5.5f)
             {
                 spawnNewEnemy();
             }
@@ -88,5 +91,21 @@ public class GameManager : MonoBehaviour
     private void spawnAirBubble()
     {
         GameObject bubble = Instantiate(airBubble, new Vector2(Random.Range(-2,3),6), Quaternion.identity);
+    }
+
+    public void Restart()
+    {
+        StartCoroutine(RestartAfterSound());
+    }
+
+    public IEnumerator RestartAfterSound()
+    {
+        audioSource.PlayOneShot(click);
+        if (click != null)
+            yield return new WaitForSeconds(click.length);
+        else
+            yield return null;
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
     }
 }

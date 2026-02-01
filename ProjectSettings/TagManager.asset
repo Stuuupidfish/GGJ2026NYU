@@ -6,7 +6,6 @@ TagManager:
   tags:
   - AirBubble
   - Enemy
-  - Nerfer
   layers:
   - Default
   - TransparentFX

@@ -25,5 +25,4 @@ public class AirBubble : MonoBehaviour
         pos.y -= downSpeed;
         rb.MovePosition(pos);
     }
-    
 }

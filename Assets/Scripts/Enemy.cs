@@ -9,12 +9,15 @@ public class Enemy : MonoBehaviour
     {
         get {return oxygenDepletion;}
     }
-    [SerializeField] private string enemyType;
+    public string enemyType;
     [SerializeField] private float speed; 
     private GameManager gameManager;
 
     private Rigidbody2D rb;
     private bool moveRight = false;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip sound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,4 +51,13 @@ public class Enemy : MonoBehaviour
         pos.y -= downSpeed;
         rb.MovePosition(pos);
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            audioSource.PlayOneShot(sound);
+        }
+    }
+    
 }
